@@ -3,35 +3,49 @@ const app = require("express")();
 
 //custom library
 const Sequelize = require("sequelize");
+const { DataTypes } = Sequelize;
 const sequelize = require("./config/databease");
 
-const Users = sequelize.define("user", {
-  id: {
-    type: Sequelize.DataTypes.INTEGER,
+const User = sequelize.define("user", {
+  user_id: {
+    type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
     allowNull: false,
   },
   name: {
-    type: Sequelize.DataTypes.STRING,
+    type: DataTypes.STRING,
     allowNull: false,
   },
   password: {
-    type: Sequelize.DataTypes.STRING,
+    type: DataTypes.STRING,
   },
   age: {
-    type: Sequelize.DataTypes.INTEGER,
+    type: DataTypes.INTEGER,
+    allowNull: false,
     defaultValue: 21,
+  },
+  phone: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
   },
 });
 
-sequelize
-  .sync()
-  .then((data) => {
-    console.log('Table created successfully');
+User.sync({ force: true })
+  .then(() => {
+    //working with our updated table
+    const user = User.build({
+      name: "abood",
+      password: "1234",
+      age: 19,
+      phone: 123333,
+    }); //new instance of User
+    return user.save()
+  }).then((user) => {
+    console.log('user added to database successfully')
   })
-  .catch((err) => {
-    console.log('Error while creating tables')
+  .catch((error) => {
+    console.log(error);
   });
 
 console.log("another task ");
