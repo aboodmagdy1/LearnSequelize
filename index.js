@@ -36,12 +36,15 @@ Users.sync({ alter: true })
     //working wiht the updated table
     //query by sequelize
     //1)findAll()   === select * from 'users' As 'users'
-    return Users.findAll();
+      // return Users.findAll({attributes : [['name','myName'],['password','pass']]});
+    //use aggregate function             [[sql function('operation , on colum ),  return result as ]]
+    return Users.findAll({attributes : [[sequelize.fn('SUM',sequelize.col('age')),'howOld']]})
+
   })
   .then((data) => {
-    data.forEach((element)=>{
-      console.log(element.toJSON())
-    })
+    data.forEach((element) => {
+      console.log(element.toJSON());
+    });
   })
 
   .catch((err) => {
