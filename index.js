@@ -34,12 +34,7 @@ const Users = sequelize.define("users", {
 Users.sync({ alter: true })
   .then(() => {
     //working wiht the updated table
-    //query by sequelize
-    //1)findAll()   === select * from 'users' As 'users'
-      // return Users.findAll({attributes : [['name','myName'],['password','pass']]});
-    //use aggregate function             [[sql function('operation , on colum ),  return result as ]]
-    return Users.findAll({attributes : [[sequelize.fn('SUM',sequelize.col('age')),'howOld']]})
-
+    return Users.findAll({attributes:{exclude : ['password','age']}})
   })
   .then((data) => {
     data.forEach((element) => {
