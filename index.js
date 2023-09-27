@@ -6,44 +6,84 @@ const Sequelize = require("sequelize");
 const { DataTypes } = Sequelize;
 const sequelize = require("./config/databease");
 
-const Users = sequelize.define("users", {
-  user_id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-    allowNull: false,
+//one-to-one relationship
+//parent table
+const Country = sequelize.define(
+  "country",
+  {
+    countryName: {
+      type: DataTypes.STRING,
+      unique: true,
+    },
   },
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false,
+  {
+    timestamps: false,
+  }
+);
+//child table
+const Capital = sequelize.define(
+  "capital",
+  {
+    capitalName: {
+      type: DataTypes.STRING,
+      unique: true,
+    },
   },
-  password: {
-    type: DataTypes.STRING,
-  },
-  age: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 21,
-  },
-  phone: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-});
+  {
+    timestamps: false,
+  }
+);
 
-Users.sync({ alter: true })
+// Country.bulkCreate([
+//   {
+//     countryName: "egypt",
+//   },
+//   {
+//     countryName: "france",
+//   },
+//   {
+//     countryName: "germany",
+//   },
+//   {
+//     countryName: "USA",
+//   }
+// ]);
+// Capital.bulkCreate([
+//   {
+//     capitalName: "cairo",
+//   },
+// {
+//   capitalName:'paris'
+// },
+// {
+//   capitalName:'kalifornia'
+// },
+// {
+//   capitalName:'maka'
+// }
+// ]);
+
+Country.hasOne(Capital);
+Capital.belongsTo(Country);
+let capital, country;
+
+sequelize
+  .sync({ alter: true })
   .then(() => {
-    //working wiht the updated table
-    return Users.findAll({limit : 2}) //limiting the number of rows
+    //working with updated tables
+    return Country.findOne({where:{countryName:'deutch'}})
   })
   .then((data) => {
-    data.forEach((element) => {
-      console.log(element.toJSON());
-    });
+   country = data 
+   return Capital.findOne({where:{capitalName:'maka'}})
   })
-
+  .then((data) => {
+    capital = data
+    return capital.setCountry(country)
+  })
+  .then((data) => {
+    console.log(data)
+  })
   .catch((err) => {
     console.log(err);
   });
-
-console.log("another task ");
