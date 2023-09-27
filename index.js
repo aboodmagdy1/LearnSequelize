@@ -34,7 +34,7 @@ const Users = sequelize.define("users", {
 Users.sync({ alter: true })
   .then(() => {
     //working wiht the updated table
-    return Users.findAll({attributes :['name'],where:{age:21}}) //get specific attributes and specific user 
+    return Users.findAll({limit : 2}) //limiting the number of rows
   })
   .then((data) => {
     data.forEach((element) => {
