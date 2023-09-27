@@ -6,7 +6,7 @@ const Sequelize = require("sequelize");
 const { DataTypes } = Sequelize;
 const sequelize = require("./config/databease");
 
-const User = sequelize.define("user", {
+const Users = sequelize.define("users", {
   user_id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -31,21 +31,21 @@ const User = sequelize.define("user", {
   },
 });
 
-User.sync({ force: true })
+Users.sync({ alter: true })
   .then(() => {
-    //working with our updated table
-    const user = User.build({
-      name: "abood",
-      password: "1234",
-      age: 19,
-      phone: 123333,
-    }); //new instance of User
-    return user.save()
-  }).then((user) => {
-    console.log('user added to database successfully')
+    //working wiht the updated table
+    //query by sequelize
+    //1)findAll()   === select * from 'users' As 'users'
+    return Users.findAll();
   })
-  .catch((error) => {
-    console.log(error);
+  .then((data) => {
+    data.forEach((element)=>{
+      console.log(element.toJSON())
+    })
+  })
+
+  .catch((err) => {
+    console.log(err);
   });
 
 console.log("another task ");
