@@ -34,7 +34,7 @@ const Users = sequelize.define("users", {
 Users.sync({ alter: true })
   .then(() => {
     //working wiht the updated table
-    return Users.findAll({attributes:{exclude : ['password','age']}})
+    return Users.findAll({where : {age : 21}}) //get specific user 
   })
   .then((data) => {
     data.forEach((element) => {
